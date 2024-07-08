@@ -19,6 +19,11 @@ describe('Automatizar Superfrete', () => {
   });
 });
 
+
+// Para executar o teste
+npx cypress open
+
+
 2) Configurar tratamento de exceções para ignorar erros não tratados:
 
 
