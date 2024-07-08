@@ -1,0 +1,143 @@
+describe('Automatizar Superfrete', () => {
+  it('Calcula frete nos Correios', () => {
+    // Acessa o site
+    cy.visit('https://web.superfrete.com/#/calcular-correios');
+   
+    // Preenche os campos necessários
+    cy.get('input[name="cepOrigem"]').type('01001000'); // Exemplo de CEP de origem
+    cy.get('input[name="cepDestino"]').type('20040002'); // Exemplo de CEP de destino
+    cy.get('input[name="peso"]').type('1'); // Peso em kg
+    cy.get('input[name="comprimento"]').type('20'); // Comprimento em cm
+    cy.get('input[name="largura"]').type('15'); // Largura em cm
+    cy.get('input[name="altura"]').type('10'); // Altura em cm
+
+    // Clica no botão de calcular
+    cy.get('button[type="submit"]').click();
+
+    // Verifica se o resultado foi exibido
+    cy.get('.result-container').should('be.visible'); // Verifique o seletor correto da div de resultados
+  });
+});
+
+2) Configurar tratamento de exceções para ignorar erros não tratados:
+
+
+superfrete.spec.js
+// cypress/integration/superfrete.spec.js
+
+describe('Automatizar Superfrete - Validação de CEP de destino', () => {
+  it('Deve exibir mensagem de erro quando o CEP de destino não for informado', () => {
+    // Acessa o site
+    cy.visit('https://web.superfrete.com/#/calcular-correios');
+   
+    // Seleciona o formato "Caixa / Pacote"
+    cy.get('select[name="formato"]').select('Caixa / Pacote');
+
+    // Preenche os campos necessários
+    cy.get('input[name="cepOrigem"]').type('01001000'); // Exemplo de CEP de origem
+    // Não preenche o CEP de destino
+    cy.get('input[name="peso"]').type('0.3'); // Peso em kg (300g)
+
+    // Preenche dimensões válidas
+    cy.get('input[name="comprimento"]').type('20'); // Comprimento em cm
+    cy.get('input[name="largura"]').type('15'); // Largura em cm
+    cy.get('input[name="altura"]').type('10'); // Altura em cm
+
+    // Clica no botão de calcular
+    cy.get('button[type="submit"]').click();
+
+    // Verifica a mensagem de erro para CEP de destino não informado
+    cy.contains('O CEP de destino é obrigatório').should('be.visible');
+  });
+});
+
+
+A) Usuário não informa CEP de origem e deve visualizar uma
+mensagem de erro
+
+describe('Automatizar Superfrete - Validação de CEP de destino', () => {
+  it('Deve exibir mensagem de erro quando o CEP de destino não for informado', () => {
+    // Acessa o site
+    cy.visit('https://web.superfrete.com/#/calcular-correios');
+   
+    // Seleciona o formato "Caixa / Pacote"
+    cy.get('select[name="formato"]').select('Caixa / Pacote');
+
+    // Preenche os campos necessários
+    cy.get('input[name="cepOrigem"]').type('01001000'); // Exemplo de CEP de origem
+    // Não preenche o CEP de destino
+    cy.get('input[name="peso"]').type('0.3'); // Peso em kg (300g)
+
+    // Preenche dimensões válidas
+    cy.get('input[name="comprimento"]').type('20'); // Comprimento em cm
+    cy.get('input[name="largura"]').type('15'); // Largura em cm
+    cy.get('input[name="altura"]').type('10'); // Altura em cm
+
+    // Clica no botão de calcular
+    cy.get('button[type="submit"]').click();
+
+    // Verifica a mensagem de erro para CEP de destino não informado
+    cy.contains('O CEP de destino é obrigatório').should('be.visible');
+  });
+});
+
+B) Usuário não informa CEP de destino e deve visualizar uma
+mensagem de erro
+
+describe('Automatizar Superfrete - Validação de CEP de destino', () => {
+  it('Deve exibir mensagem de erro quando o CEP de destino não for informado', () => {
+    // Acessa o site
+    cy.visit('https://web.superfrete.com/#/calcular-correios');
+   
+    // Seleciona o formato "Caixa / Pacote"
+    cy.get('select[name="formato"]').select('Caixa / Pacote');
+
+    // Preenche os campos necessários
+    cy.get('input[name="cepOrigem"]').type('01001000'); // Exemplo de CEP de origem
+    // Não preenche o CEP de destino
+    cy.get('input[name="peso"]').type('0.3'); // Peso em kg (300g)
+
+    // Preenche dimensões válidas
+    cy.get('input[name="comprimento"]').type('20'); // Comprimento em cm
+    cy.get('input[name="largura"]').type('15'); // Largura em cm
+    cy.get('input[name="altura"]').type('10'); // Altura em cm
+
+    // Clica no botão de calcular
+    cy.get('button[type="submit"]').click();
+
+    // Verifica a mensagem de erro para CEP de destino não informado
+    cy.contains('O CEP de destino é obrigatório').should('be.visible');
+  });
+});
+
+C) Usuário seleciona o formato "Caixa / Pacote" e peso "300g" e
+informa altura < 0.4 cm, largura < 8 cm e comprimento menor
+que 13 cm e deve visualizar três mensagens de erro
+
+describe('Automatizar Superfrete - Validação de dimensões', () => {
+  it('Deve exibir mensagens de erro para dimensões inválidas', () => {
+    // Acessa o site
+    cy.visit('https://web.superfrete.com/#/calcular-correios');
+   
+    // Seleciona o formato "Caixa / Pacote"
+    cy.get('select[name="formato"]').select('Caixa / Pacote');
+
+    // Preenche os campos necessários
+    cy.get('input[name="cepOrigem"]').type('01001000'); // Exemplo de CEP de origem
+    cy.get('input[name="cepDestino"]').type('20040002'); // Exemplo de CEP de destino
+    cy.get('input[name="peso"]').type('0.3'); // Peso em kg (300g)
+
+    // Preenche dimensões inválidas
+    cy.get('input[name="comprimento"]').type('12'); // Comprimento menor que 13 cm
+    cy.get('input[name="largura"]').type('7'); // Largura menor que 8 cm
+    cy.get('input[name="altura"]').type('0.3'); // Altura menor que 0.4 cm
+
+    // Clica no botão de calcular
+    cy.get('button[type="submit"]').click();
+
+    // Verifica as mensagens de erro
+    cy.contains('O comprimento mínimo permitido é de 13 cm').should('be.visible');
+    cy.contains('A largura mínima permitida é de 8 cm').should('be.visible');
+    cy.contains('A altura mínima permitida é de 0.4 cm').should('be.visible');
+  });
+});
